@@ -1,50 +1,39 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios'
+import axios from 'axios';
 
-
-function ProductChecker (props) {
+function ProductChecker(props) {
   const [isAvailable, setIsAvailable] = useState(false);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const checkAvailability = async () => {
       try {
-        // Make an HTTP GET request to the Nike product page
-        const response = await axios.get('https://www.nike.com/t/sportswear-tech-fleece-mens-full-zip-hoodie-5ZtTtk/CU4489-491');
+        // Make an HTTP GET request to your proxy server
+        const response = await axios.get('/api/product');
 
-        // Create a new DOM element to parse the HTML content
-        const parser = new DOMParser();
-        const htmlDoc = parser.parseFromString(response.data, 'text/html');
-
-        // Extract the sizes and availability status
-        const sizeElements = htmlDoc.querySelectorAll('.product-size-grid input[type="radio"]');
-        const sizes = Array.from(sizeElements).map((element) => element.getAttribute('data-displayname'));
-
-        const availabilityElement = htmlDoc.querySelector('.product-info .product-info-title');
-        const availability = availabilityElement ? availabilityElement.textContent : '';
-
-        // Check if the desired size is available
-        const desiredSize = 'M'; // Replace with your desired size
-        setIsAvailable(sizes.includes(desiredSize) && availability.toLowerCase().includes('available'));
+        // Check if the product is available
+        const isProductAvailable = response.data.includes('Currently unavailable.');
+        setIsAvailable(!isProductAvailable);
       } catch (error) {
         console.error('Error retrieving product information:', error);
       }
     };
 
-    fetchData();
+    // Poll for availability every 5 seconds
+    const interval = setInterval(checkAvailability, 5000);
+
+    // Clean up the interval on component unmount
+    return () => clearInterval(interval);
   }, []);
 
   return (
     <div>
       {isAvailable ? (
-        <p>The desired size is available!</p>
+        <p>The product is available!</p>
       ) : (
-        <p>The desired size is not available yet.</p>
+        <p>The product is currently unavailable.</p>
       )}
     </div>
   );
 }
 
 export default ProductChecker;
-
-
-
