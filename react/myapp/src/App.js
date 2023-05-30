@@ -1,23 +1,14 @@
 import logo from './logo.svg';
 import './App.css';
+import ProductChecker from './ProductChecker.js';
 
 function App() {
+  const productUrl = 'https://www.nike.com/t/sportswear-tech-fleece-mens-full-zip-hoodie-5ZtTtk/CU4489-491'; // Replace with the URL of the Nike product you want to monitor
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h1>Product Availability Checker</h1>
+      <ProductChecker productUrl={productUrl} />
     </div>
   );
 }
