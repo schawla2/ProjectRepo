@@ -1,1 +1,1 @@
-# NBAParlays
+# Personalized Bot
